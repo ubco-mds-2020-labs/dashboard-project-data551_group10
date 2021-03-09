@@ -109,8 +109,8 @@ app.layout = dbc.Container([
             # Plot 4 - ? Prediction Analysis
             dbc.Tab([
                     html.Br(),
-                    html.Iframe(id = "boxplot", style = {'border-width': '0', 'width': '700px', 'height': '700px'}),
-                    html.Iframe(id = "barplot", style = {'border-width': '0', 'width': '700px', 'height': '700px'})
+                    html.Iframe(id = "boxplot", style = {'border-width': '0', 'width': '700px', 'height': '700px','marginLeft':30}),
+                    html.Iframe(id = "lineplot", style = {'border-width': '0', 'width': '700px', 'height': '700px'})
                 ], label='Subscription Prediction Analysis')
                 
             ],style={'marginTop':30}) # end of Tabs
@@ -161,14 +161,14 @@ def nc_plot(numeric, categorical):
 
 #plot4
 @app.callback(
-    Output('barplot', 'srcDoc'),
+    Output('lineplot', 'srcDoc'),
     Input('categorical-widget', 'value'),
     Input('ycol', 'value')
     )
 
-def plot_barchart(xcol,ycol):
+def plot_linechart(xcol,ycol):
     alt.data_transformers.disable_max_rows()
-    chart = alt.Chart(df[(df["Predicted Subscription for Current Campaign"] == ycol)]).mark_line().encode(
+    chart = alt.Chart(df[(df["Predicted Subscription for Current Campaign"] == ycol)]).mark_line(point=True).encode(
     alt.X(xcol,title = xcol), 
     y= "count(Type of Job)"
     )
