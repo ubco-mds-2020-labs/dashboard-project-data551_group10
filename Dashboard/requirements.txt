@@ -1,0 +1,10 @@
+dash==1.19.0
+dash_core_components
+dash_html_components
+dash_bootstrap_components
+dash.dependencies
+numpy
+pandas
+altair
+vega_datasets
+gunicorn
