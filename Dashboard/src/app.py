@@ -1,5 +1,4 @@
 import dash
-server = app.server
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
@@ -35,16 +34,6 @@ def corr_plot():
                                 alt.value(0.2))
                                 ).add_selection(click).properties(width = 250, height = 250)
     return chart_2.to_html()
-
-
-
-# Plot 4
-def pre_plot():
-    a = alt.Chart(df).mark_boxplot().encode(
-        x = "Age", 
-        y = "Predicted Subscription for Current Campaign", 
-        color = "Predicted Subscription for Current Campaign")
-    return a.to_html()
 
 
 
@@ -92,6 +81,15 @@ app.layout = dbc.Container([
         
     ]), # end of Menu & Text Section
     
+    dbc.Row([
+        dbc.Col([
+        dcc.Dropdown(
+            id='ycol',
+            value='yes',
+            options=[{'label': col, 'value': col} for col in df["Predicted Subscription for Current Campaign"].unique()],
+            style={'width': '440px', 'fontsize': 5, 'marginTop':10})], md=4, style={'marginTop':20})
+    ]),
+    
     
     
     # Plots Section
@@ -111,7 +109,8 @@ app.layout = dbc.Container([
             # Plot 4 - ? Prediction Analysis
             dbc.Tab([
                     html.Br(),
-                    html.Iframe(srcDoc = pre_plot(), style = {'border-width': '0', 'width': '700px', 'height': '700px', 'marginTop':20})
+                    html.Iframe(id = "boxplot", style = {'border-width': '0', 'width': '700px', 'height': '700px'}),
+                    html.Iframe(id = "barplot", style = {'border-width': '0', 'width': '700px', 'height': '700px'})
                 ], label='Subscription Prediction Analysis')
                 
             ],style={'marginTop':30}) # end of Tabs
@@ -160,6 +159,35 @@ def nc_plot(numeric, categorical):
     
     return chart.to_html()
 
+#plot4
+@app.callback(
+    Output('barplot', 'srcDoc'),
+    Input('categorical-widget', 'value'),
+    Input('ycol', 'value')
+    )
+
+def plot_barchart(xcol,ycol):
+    alt.data_transformers.disable_max_rows()
+    chart = alt.Chart(df[(df["Predicted Subscription for Current Campaign"] == ycol)]).mark_line().encode(
+    alt.X(xcol,title = xcol), 
+    y= "count(Type of Job)"
+    )
+    return chart.to_html()
+
+#plot5
+@app.callback(
+    Output('boxplot','srcDoc'),
+    Input('numeric-widget','value'),
+    Input('ycol', 'value')
+)
+
+
+def plot_boxplot(xcol_q,ycol):
+    alt.data_transformers.disable_max_rows()
+    chart = alt.Chart(df[(df["Predicted Subscription for Current Campaign"] == ycol)]).mark_boxplot().encode(
+        x = xcol_q,
+        y = "Predicted Subscription for Current Campaign")
+    return chart.to_html()
 
 
 
