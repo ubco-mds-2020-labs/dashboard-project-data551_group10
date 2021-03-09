@@ -1,5 +1,5 @@
+#sys.path.insert(0, '../src')
 import dash
-server = app.server
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
@@ -7,14 +7,13 @@ from dash.dependencies import Input, Output
 import numpy as np
 import pandas as pd
 import altair as alt
-from vega_datasets import data
 
 
-df = pd.read_csv("data/bank.csv", sep = ',')
-df_corr = pd.read_csv("data/bank_corr.csv", sep = ',')
-df_g = pd.read_csv("data/bank_group.csv", sep = ',')
-df_c = pd.read_csv("data/bank_c.csv", sep = ',')
-df_n = pd.read_csv("data/bank_n.csv", sep = ',')
+df = pd.read_csv("bank.csv", sep = ',')
+df_corr = pd.read_csv("bank_corr.csv", sep = ',')
+df_g = pd.read_csv("bank_group.csv", sep = ',')
+df_c = pd.read_csv("bank_c.csv", sep = ',')
+df_n = pd.read_csv("bank_n.csv", sep = ',')
 
 
 # Plot 1
