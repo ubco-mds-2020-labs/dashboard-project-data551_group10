@@ -82,23 +82,6 @@ app.layout = dbc.Container([
         
     ]), # end of Menu & Text Section
     
-    #New Row for prediction RadioItem 
-    
-    dbc.Row([
-        dbc.Col([
-            html.Label([
-                'Predicted Subscription for Current Campaign',
-    
-    
-     dcc.RadioItems(
-         id='ycol',
-         options=[
-            {'label': 'Yes', 'value': 'yes'},
-            {'label': 'No', 'value': 'no'}],
-         value='yes',
-         inputStyle={"margin-left": "80px"},
-         style={"padding": "10px", "max-width": "800px", "margin-left": "-80px"},)])], md=4, style={'marginTop':20})
-    ]),
     
     
     
@@ -118,10 +101,34 @@ app.layout = dbc.Container([
                 
             # Plot 4 - 5 Prediction Analysis
             dbc.Tab([
+                
+                #New Row for prediction RadioItem 
+    
+                dbc.Row([
+                    dbc.Col([
+                    html.Label(['Predicted Subscription for Current Campaign',
+                                dcc.RadioItems(
+                                    id='ycol',
+                                    options=[
+                                        {'label': 'Yes', 'value': 'yes'},
+                                        {'label': 'No', 'value': 'no'}],
+                                    value='yes',
+                                    inputStyle={"margin-left": "80px"},
+                                    style={"padding": "10px", "max-width": "800px", "margin-left": "-80px"},)])], md=4, style={'marginTop':20})
+    ]),
+                html.Br(),
+                html.Br(),
+                #Row for plots
+                dbc.Row([
+                
+                
                     html.Br(),
                     html.Iframe(id = "boxplot", style = {'border-width': '0', 'width': '700px', 'height': '700px','marginLeft':30}),
                     html.Iframe(id = "lineplot", style = {'border-width': '0', 'width': '700px', 'height': '700px'})
-                ], label='Subscription Prediction Analysis')
+                ])
+            
+            
+            ], label='Subscription Prediction Analysis')
                 
             ],style={'marginTop':30}) # end of Tabs
              
