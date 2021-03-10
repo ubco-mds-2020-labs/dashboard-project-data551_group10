@@ -82,15 +82,22 @@ app.layout = dbc.Container([
         
     ]), # end of Menu & Text Section
     
+    #New Row for prediction RadioItem 
+    
     dbc.Row([
         dbc.Col([
             html.Label([
                 'Predicted Subscription for Current Campaign',
-        dcc.Dropdown(
-            id='ycol',
-            value='yes',
-            options=[{'label': col, 'value': col} for col in df["Predicted Subscription for Current Campaign"].unique()],
-            style={'width': '440px', 'fontsize': 5, 'marginTop':10})])], md=4, style={'marginTop':20})
+    
+    
+     dcc.RadioItems(
+         id='ycol',
+         options=[
+            {'label': 'Yes', 'value': 'yes'},
+            {'label': 'No', 'value': 'no'}],
+         value='yes',
+         inputStyle={"margin-left": "80px"},
+         style={"padding": "10px", "max-width": "800px", "margin-left": "-80px"},)])], md=4, style={'marginTop':20})
     ]),
     
     
