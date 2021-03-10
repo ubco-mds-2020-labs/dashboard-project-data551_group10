@@ -96,7 +96,7 @@ app.layout = dbc.Container([
                     html.Iframe(id = 'nc', style = {'border-width': '0', 'width': '500px', 'height': '500px'}),
                     html.Iframe(id = 'distribution', style = {'border-width': '0', 'width': '450px', 'height': '500px'})
                 
-                ],label='Data Distribution Plots'), 
+                ],label='Data Analysis'), 
                 
                 
             # Plot 4 - 5 Prediction Analysis
