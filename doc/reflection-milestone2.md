@@ -8,7 +8,7 @@ Other than the heatmap plot we made in our latest report, we also made a plot fo
 
 Our team had a high collaboration contribution. Mona contributes to the data wrangling and data analyzing part. Zhiyan responses to the plots relate to the prediction. The struggle we met was the first time using Heroku and failed to implement it for a long time.
 
-##Limitation
+## Limitation
 
 We do not have a function likes machine learning which provides the most accurate prediction for our customer. If we have enough time, we will give that more precise prediction. We also lack multiple variables contribution analysis.
 
