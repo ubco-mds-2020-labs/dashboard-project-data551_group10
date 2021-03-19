@@ -12,7 +12,3 @@ This dashboard is designed to help the Portuguese bank to achieve higher revenue
 From the two (drop down) menus, users can filter out variables from the distribution display with functions such as sort, and view predictions for client subscription by age groups, education levels, etc. We also include a correlation heatmap to provide users with more insights of the data.
 
 
-
-## Dashboard Sketch
-
-![Dashboard Sketch](https://github.com/ubco-mds-2020-labs/dashboard-project-data551_group10/blob/main/sketch.png?raw=true)
