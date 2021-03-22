@@ -10,31 +10,13 @@ from vega_datasets import data
 
 
 df = pd.read_csv("data/processed/bank.csv", sep = ',')
-df_corr = pd.read_csv("data/processed/bank_corr.csv", sep = ',')
+#df_corr = pd.read_csv("data/processed/bank_corr.csv", sep = ',')
 df_g = pd.read_csv("data/processed/bank_group.csv", sep = ',')
-df_c = pd.read_csv("data/processed/bank_c.csv", sep = ',')
-df_n = pd.read_csv("data/processed/bank_n.csv", sep = ',')
+df_c = pd.read_csv("data/processed/bank_categorical.csv", sep = ',')
+df_n = pd.read_csv("data/processed/bank_numeric.csv", sep = ',')
 
 
 # Plot 1
-def corr_plot():
-    click = alt.selection_multi()
-    cor_data = (df_corr.corr().stack().reset_index().rename(columns={0: 'correlation', 'level_0': 'variable', 'level_1': 'variable2'}))
-    cor_data['correlation_label'] = cor_data['correlation'].map('{:.2f}'.format) 
-    base = alt.Chart(cor_data).encode( 
-        x = alt.X('variable2:O', axis=alt.Axis(title = '')),
-        y = alt.Y('variable:O', axis=alt.Axis(title = '')))
-    text = base.mark_text().encode(
-        text='correlation_label', 
-        color=alt.condition( alt.datum.correlation > 0.5, alt.value('white'),alt.value('black')))
-    cor_plot = base.mark_rect().encode(color = alt.Color('correlation:Q', legend=None))
-    chart_2 = (cor_plot + text).encode(
-        opacity = alt.condition(click, 
-                                alt.value(0.9), 
-                                alt.value(0.2))
-                                ).add_selection(click).properties(width = 250, height = 250)
-    return chart_2.to_html()
-
 
 
 
@@ -90,13 +72,7 @@ app.layout = dbc.Container([
         dbc.Tabs([
                 
             # Plot 1 - 3 Data Distribution 
-            dbc.Tab([
-                    html.Br(),
-                    html.Iframe(srcDoc = corr_plot(), style = {'border-width': '0', 'width': '500px', 'height': '500px'}),
-                    html.Iframe(id = 'nc', style = {'border-width': '0', 'width': '500px', 'height': '500px'}),
-                    html.Iframe(id = 'distribution', style = {'border-width': '0', 'width': '450px', 'height': '500px'})
-                
-                ],label='Data Distribution Plots'), 
+            
                 
                 
             # Plot 4 - 5 Prediction Analysis
@@ -142,54 +118,7 @@ app.layout = dbc.Container([
 
 
 
-# Plot 2
-@app.callback(
-    Output('distribution', 'srcDoc'),
-    Input('xcol-widget', 'value'))
-def bank_data(xcol):
-    click = alt.selection_multi()
-    distribution = alt.Chart(df_g).mark_bar().encode(
-        y = alt.Y(xcol+':N', sort='-x'), 
-        x = 'count()', 
-        color = alt.Color(xcol, legend=None), 
-        tooltip = 'count()',
-        opacity = alt.condition(click, alt.value(0.9), alt.value(0.2))).add_selection(click).properties(width = 250, height = 400)
-    return distribution.to_html()
 
-
-# Plot 3
-@app.callback(
-    Output('nc', 'srcDoc'),
-    Input('numeric-widget', 'value'),
-    Input('categorical-widget', 'value'))
-
-def nc_plot(numeric, categorical):
-    brush = alt.selection_interval()
-    click = alt.selection_multi(fields=[categorical], bind='legend')
-
-    chart = alt.Chart(df).mark_line().encode(
-            alt.X(numeric + ':Q', bin=alt.Bin(maxbins=30)),
-            y = 'count()',
-            color = categorical + ":N",
-            opacity = alt.condition(click, alt.value(0.9), alt.value(0.2))
-    ).add_selection(brush).add_selection(click).properties(width = 250, height = 400)
-    
-    return chart.to_html()
-
-#plot4
-@app.callback(
-    Output('lineplot', 'srcDoc'),
-    Input('categorical-widget', 'value'),
-    Input('ycol', 'value')
-    )
-
-def plot_linechart(xcol,ycol):
-    alt.data_transformers.disable_max_rows()
-    chart = alt.Chart(df[(df["Predicted Subscription for Current Campaign"] == ycol)]).mark_line(point=True).encode(
-    alt.X(xcol,title = xcol), 
-    y= "count(Type of Job)"
-    )
-    return chart.to_html()
 
 #plot5
 @app.callback(
@@ -201,9 +130,9 @@ def plot_linechart(xcol,ycol):
 
 def plot_boxplot(xcol_q,ycol):
     alt.data_transformers.disable_max_rows()
-    chart = alt.Chart(df[(df["Predicted Subscription for Current Campaign"] == ycol)]).mark_boxplot().encode(
+    chart = alt.Chart(df[(df["Predicted Subscription (current)"] == ycol)]).mark_bar().encode(
         x = xcol_q,
-        y = "Predicted Subscription for Current Campaign")
+        y = "count()")
     return chart.to_html()
 
 

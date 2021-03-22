@@ -14,10 +14,10 @@ import plotly.express as px
 ##### Data 
 #####
 alt.data_transformers.disable_max_rows()
-df = pd.read_csv("bank.csv", sep = ',')
-df_g = pd.read_csv("bank_group.csv", sep = ',')
-df_c = pd.read_csv("bank_categorical.csv", sep = ',')
-df_n = pd.read_csv("bank_numeric.csv", sep = ',')
+df = pd.read_csv("data/processed/bank.csv", sep = ',')
+df_g = pd.read_csv("data/processed/bank_group.csv", sep = ',')
+df_c = pd.read_csv("data/processed/bank_categorical.csv", sep = ',')
+df_n = pd.read_csv("data/processed/bank_numeric.csv", sep = ',')
 
 
 
@@ -52,7 +52,7 @@ CONTENT_STYLE = {
 #####
 sidebar = html.Div(
     [
-        html.H2("Placeholder", className="display-4"),
+        html.H2("Porguese Bank", className="display-4"),
         html.Hr(),
         dbc.Nav(
             [
@@ -64,7 +64,7 @@ sidebar = html.Div(
             pills=True,
         ),
 		html.Hr(),
-        html.P("Add some text here ", className="lead"),
+        html.P("Design by Mona Jia, Zhiyan Ma ", className="lead"),
         html.P("Add some text here ", className="lead"),
         html.P("Add some text here ", className="lead"),
         html.P("Add some text here ", className="lead"),
@@ -368,6 +368,44 @@ def render_page_content(pathname):
             	dbc.Tab([
                 
     				dbc.Row([
+                        
+                        #Left dropdown menu
+                        dbc.Col([
+                            
+                            # Categorical Dropdown Menu 
+        					dbc.Row([
+        				    		 html.Br(),
+           				 			 html.Label([
+                					 html.P('SELECT AN ATTRIBUTE FOR X AXIS',style={'margin-left':'35px'}),
+                					 dcc.Dropdown(
+                   					 		id = 'categorical_prediction', 
+                   					 		value = 'Type of Job',  
+                   					 		options = [{'label': col, 'value': col} for col in df_c.columns], 
+                   					 		style={'width': '300px', 'fontsize': 5, 'marginTop':10, 'left':'35px'})])], style={'marginTop':20}),
+                            #Prediction radio item menu
+                            dbc.Row([
+        				    		 html.Br(),
+           				 			 html.Label([
+                					 html.P('SELECT AN ATTRIBUTE FOR Y AXIS',style={'margin-left':'35px'}),
+                					 dcc.RadioItems(
+                                         id='prediction',
+                                         options=[
+                                            {'label': 'Yes', 'value': 'yes'},
+                                            {'label': 'No', 'value': 'no'}],
+                                         value='yes',
+                                         inputStyle={"margin-left": "80px"},
+                                         style={'width': '300px', 'fontsize': 5, 'marginTop':10,"margin-left": "-45px"})
+                                     
+                                         ])], style={'marginTop':20}),
+                        
+                        ]),
+                        
+                        #Plot 5 Bar plot
+                        dbc.Col([
+                            html.Br(),
+                    		html.Br(),
+                    		html.Iframe(id = 'barplot', style = {'border-width': '0', 'width': '750px', 'height': '1000px','position': 'absolute', 'right': '20px'})
+                        ])
     			
 
 
@@ -377,7 +415,7 @@ def render_page_content(pathname):
                 	], style = {'width': '1150px', 'height': '550px'}) # /Row 
 
             
-           		], label='Plot 5'), # /Tab5                  
+           		], label='Categorical Variable VS. Subscription (bar)'), # /Tab5                  
                 
                 
                 
@@ -390,6 +428,45 @@ def render_page_content(pathname):
             	dbc.Tab([
                 
     				dbc.Row([
+                        
+                        #Dropdown Menu
+                        dbc.Col([
+                            # Numerical Dropdown Menu  
+        					dbc.Row([
+
+            					html.Label([
+            		        		 html.Br(),
+        							 html.Br(),
+                					 html.P('SELECT AN ATTRIBUTE FOR X AXIS',style={'margin-left':'35px'}),
+                					 dcc.Dropdown(
+                   				 			id = 'numeric_prediction', 
+                   							value = 'Age',  
+                    						options = [{'label': col, 'value': col} for col in df_n.columns], 
+                    						style={'width': '300px', 'fontsize': 5, 'marginTop':10, 'left':'35px'})])], style={'marginTop':20}),
+                            dbc.Row([
+        				    		 html.Br(),
+           				 			 html.Label([
+                					 html.P('SELECT AN ATTRIBUTE FOR Y AXIS',style={'margin-left':'35px'}),
+                					 dcc.RadioItems(
+                                         id='prediction_2',
+                                         options=[
+                                            {'label': 'Yes', 'value': 'yes'},
+                                            {'label': 'No', 'value': 'no'}],
+                                         value='yes',
+                                         inputStyle={"margin-left": "80px"},
+                                         style={'width': '300px', 'fontsize': 5, 'marginTop':10,"margin-left": "-45px"})
+                                     
+                                         ])], style={'marginTop':20}),
+                            
+                        ]),
+                        
+                        #Plot 5 Distribution Plot
+                        dbc.Col([
+                            html.Br(),
+                    		html.Br(),
+                    		html.Iframe(id = 'distributionplot', style = {'border-width': '0', 'width': '750px', 'height': '1000px','position': 'absolute', 'right': '20px'})
+                        ])
+                        
     			
 
 
@@ -399,7 +476,7 @@ def render_page_content(pathname):
                 	], style = {'width': '1150px', 'height': '550px'}) # /Row 
 
             
-            	], label='Plot 6'), # /Tab6      
+            	], label='Numerical Variable VS. Subscription'), # /Tab6      
                 
         	
         	], style={'marginTop':30}) # /Tab5-6
@@ -510,10 +587,25 @@ def nc_plot(numeric, categorical):
 	
 	
 #####
-##### Plot 5 - 
+##### Plot 5 - Bar
 #####
 
+@app.callback(
+    Output('barplot','srcDoc'),
+    Input('categorical_prediction','value'),
+    Input('prediction','value'))
 
+def bar_plot(xcol,ycol):
+    alt.data_transformers.disable_max_rows()
+    click = alt.selection_multi()
+    chart = alt.Chart(df[(df["Predicted Subscription (current)"] == ycol)]).mark_bar().encode(
+    alt.X(xcol,title = xcol), 
+    y= "count(Type of Job)",
+    color = alt.Color(xcol, legend=None)
+    ).properties(width=alt.Step(50)).configure_axis(
+    labelFontSize=20,
+    titleFontSize=25)
+    return chart.to_html()
 
 
 
@@ -523,12 +615,23 @@ def nc_plot(numeric, categorical):
 
 
 #####
-##### Plot 6 - 
+##### Plot 6 - Distribution
 #####
 
+@app.callback(
+    Output('distributionplot','srcDoc'),
+    Input('numeric_prediction','value'),
+    Input('prediction_2','value'))
 
-
-
+def distribution_plot(xcol,ycol):
+    alt.data_transformers.disable_max_rows()
+    chart = alt.Chart(df[(df["Predicted Subscription (current)"] == ycol)]).mark_bar().encode(
+    alt.X(xcol,title = xcol), 
+    y= "count()"
+    ).configure_axis(
+    labelFontSize=20,
+    titleFontSize=25)
+    return chart.to_html()
 
 
 
