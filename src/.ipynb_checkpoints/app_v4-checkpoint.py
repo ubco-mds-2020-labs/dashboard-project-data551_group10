@@ -398,7 +398,7 @@ def render_page_content(pathname):
                                      
                                          ])], style={'marginTop':20}),
                         
-                        ]),
+                        ],style={'marginTop':20}),
                         
                         #Plot 5 Bar plot
                         dbc.Col([
@@ -442,7 +442,7 @@ def render_page_content(pathname):
                    				 			id = 'numeric_prediction', 
                    							value = 'Age',  
                     						options = [{'label': col, 'value': col} for col in df_n.columns], 
-                    						style={'width': '300px', 'fontsize': 5, 'marginTop':10, 'left':'35px'})])], style={'marginTop':20}),
+                    						style={'width': '300px', 'fontsize': 5, 'marginTop':10, 'left':'35px'})])], ),
                             dbc.Row([
         				    		 html.Br(),
            				 			 html.Label([

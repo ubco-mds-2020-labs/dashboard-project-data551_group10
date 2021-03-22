@@ -52,7 +52,7 @@ CONTENT_STYLE = {
 #####
 sidebar = html.Div(
     [
-        html.H2("Porguese Bank", className="display-4"),
+        html.H1("Portuguese Bank Term Deposit Subscription Analysis", className="display-4",style={"fontSize": "40px", "color": "#02075D"}),
         html.Hr(),
         dbc.Nav(
             [
@@ -64,10 +64,7 @@ sidebar = html.Div(
             pills=True,
         ),
 		html.Hr(),
-        html.P("Design by Mona Jia, Zhiyan Ma ", className="lead"),
-        html.P("Add some text here ", className="lead"),
-        html.P("Add some text here ", className="lead"),
-        html.P("Add some text here ", className="lead"),
+        html.P("Design by Mona Jia, Zhiyan Ma ", className="lead")
         
 
     ],
@@ -141,7 +138,7 @@ def render_page_content(pathname):
 							html.P('* Hover over the plot to see ', style={'margin-left':'10px'}),
 							html.P('  count of each subgroup ', style={'margin-left':'22px'}),
 							html.P('* Click on the bar to highlight groups', style={'margin-left':'10px'}),
-							html.P('* Press `shift` and click on bars  ', style={'margin-left':'10px'}),
+							html.P("* Press 'shift' and click on bars  ", style={'margin-left':'10px'}),
 							html.P('  to select more than one group', style={'margin-left':'22px'}),
         				 	html.Br()
                   	
@@ -258,7 +255,7 @@ def render_page_content(pathname):
         				 	html.P('* Click and drag on the plot ', style={'margin-left':'15px'}),
 							html.P('  to highligh area', style={'margin-left':'27px'}),
 							html.P('* Click on the legend to highlight groups', style={'margin-left':'15px'}),
-							html.P('* Press `shift` and click on legends  ', style={'margin-left':'10px'}),
+							html.P("* Press 'shift' and click on legends  ", style={'margin-left':'10px'}),
 							html.P('  to select more than one group', style={'margin-left':'27px'}),
         				 	html.Br()
         
@@ -397,8 +394,18 @@ def render_page_content(pathname):
                                          style={'width': '300px', 'fontsize': 5, 'marginTop':10,"margin-left": "-45px"})
                                      
                                          ])], style={'marginTop':20}),
+                            html.Br(),
+        				 	html.P('* Use X axis to select categorical variables ', style={'margin-left':'15px'}),
+							
+							html.P('* Use Y axis to select subsription', style={'margin-left':'15px'}),
+                            html.P('or non-subscription', style={'margin-left':'27px'}),
+							html.P('* Compare between each categories  ', style={'margin-left':'15px'}),
+							
+        				 	html.Br()
                         
-                        ]),
+                        ],style={'marginTop':30}),
+                        
+                            
                         
                         #Plot 5 Bar plot
                         dbc.Col([
@@ -415,7 +422,7 @@ def render_page_content(pathname):
                 	], style = {'width': '1150px', 'height': '550px'}) # /Row 
 
             
-           		], label='Categorical Variable VS. Subscription (bar)'), # /Tab5                  
+           		], label='Categorical Variable VS. Subscription (Count)'), # /Tab5                  
                 
                 
                 
@@ -442,7 +449,7 @@ def render_page_content(pathname):
                    				 			id = 'numeric_prediction', 
                    							value = 'Age',  
                     						options = [{'label': col, 'value': col} for col in df_n.columns], 
-                    						style={'width': '300px', 'fontsize': 5, 'marginTop':10, 'left':'35px'})])], style={'marginTop':20}),
+                    						style={'width': '300px', 'fontsize': 5, 'marginTop':10, 'left':'35px'})])], ),
                             dbc.Row([
         				    		 html.Br(),
            				 			 html.Label([
@@ -454,7 +461,16 @@ def render_page_content(pathname):
                                             {'label': 'No', 'value': 'no'}],
                                          value='yes',
                                          inputStyle={"margin-left": "80px"},
-                                         style={'width': '300px', 'fontsize': 5, 'marginTop':10,"margin-left": "-45px"})
+                                         style={'width': '300px', 'fontsize': 5, 'marginTop':10,"margin-left": "-45px"}),
+                            html.Br(),
+        				 	html.P('* Use X axis to select numerical variables ', style={'margin-left':'25px'}),
+							
+							html.P('* Use Y axis to select subsription', style={'margin-left':'25px'}),
+                            html.P('or non-subscription', style={'margin-left':'37px'}),
+							html.P('* Check the trend of the graph', style={'margin-left':'25px'}),
+							
+        				 	html.Br()
+                                         
                                      
                                          ])], style={'marginTop':20}),
                             
@@ -476,7 +492,7 @@ def render_page_content(pathname):
                 	], style = {'width': '1150px', 'height': '550px'}) # /Row 
 
             
-            	], label='Numerical Variable VS. Subscription'), # /Tab6      
+            	], label='Numerical Variable VS. Subscription (Distribution)'), # /Tab6      
                 
         	
         	], style={'marginTop':30}) # /Tab5-6
@@ -515,7 +531,9 @@ def bank_data(xcol):
         x = 'count()', 
         color = alt.Color(xcol, legend=None, scale=alt.Scale(scheme='blueorange')), 
         tooltip = 'count()',
-        opacity = alt.condition(click, alt.value(0.9), alt.value(0.2))).add_selection(click).properties(width = 400, height = 400)
+        opacity = alt.condition(click, alt.value(0.9), alt.value(0.2))).add_selection(click).properties(width = 400, height = 400).configure_axis(
+    labelFontSize=20,
+    titleFontSize=25)
     return distribution.to_html()
     
     
@@ -557,7 +575,9 @@ def nc_plot(numeric, categorical):
             y = 'count()',
             color = alt.Color(categorical + ":N", scale=alt.Scale(scheme='blueorange')),
             opacity = alt.condition(click, alt.value(0.9), alt.value(0.2))
-    ).add_selection(brush).add_selection(click).properties(width = 400, height = 400)
+    ).add_selection(brush).add_selection(click).properties(width = 400, height = 400).configure_axis(
+    labelFontSize=20,
+    titleFontSize=25)
     
     return chart.to_html()
 
@@ -578,7 +598,9 @@ def nc_plot(numeric, categorical):
     	x=categorical,
     	y=numeric,
     	color = alt.Color(categorical, scale=alt.Scale(scheme='blueorange'))
-    	).properties(width = 400, height = 400)
+    	).properties(width = 400, height = 400).configure_axis(
+    labelFontSize=20,
+    titleFontSize=25)
 
 	return chart.to_html()
 	
